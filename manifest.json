@@ -1,17 +1,11 @@
 {
-  "name": "RescueBite",
-  "short_name": "RescueBite",
-  "start_url": "./index.html",
+  "background_color": "#ffffff",
+  "dir": "ltr",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#10b981",
-  "description": "Smart Food Expiry & Pantry Rescue App",
-  "icons": [
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/2921/2921822.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ]
+  "name": "RescueBite",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "RescueBite",
+  "start_url": "/",
+  "theme_color": "#ffffff"
 }
