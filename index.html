@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RescueBite - Smart Food Rescue</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .bg-gradient-glow {
+            background: radial-gradient(circle at top right, rgba(34, 197, 94, 0.15), transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(234, 179, 8, 0.1), transparent 40%);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-glow flex flex-col items-center justify-start p-2 sm:p-4">
+
+    <!-- Mobile Frame Simulation -->
+    <div class="w-full max-w-md bg-slate-900 min-h-[92vh] rounded-3xl border border-slate-800 shadow-2xl overflow-hidden flex flex-col relative pb-20">
+        
+        <!-- Top App Bar -->
+        <header class="p-5 flex items-center justify-between border-b border-slate-800/80 bg-slate-900/90 backdrop-blur sticky top-0 z-30">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                    <i class="fa-solid fa-leaf text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent">RescueBite</h1>
+                    <p class="text-xs text-slate-400 font-medium">Zero Waste, Maximum Taste</p>
+                </div>
+            </div>
+            <button onclick="openTab('viral')" class="flex items-center space-x-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-full text-xs font-semibold hover:bg-emerald-500/20 transition">
+                <i class="fa-solid fa-fire text-amber-400"></i>
+                <span id="streakCount">7 Day Streak</span>
+            </button>
+        </header>
+
+        <!-- Main Dynamic Content Container -->
+        <main class="flex-1 overflow-y-auto p-4 space-y-5">
+
+            <!-- TAB 1: PANTRY (Default) -->
+            <section id="tab-pantry" class="space-y-4">
+                
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="glass-panel p-3.5 rounded-2xl flex flex-col justify-between">
+                        <span class="text-xs text-slate-400 font-medium">Rescued Value</span>
+                        <span class="text-xl font-extrabold text-emerald-400 mt-1" id="moneySaved">$142.50</span>
+                    </div>
+                    <div class="glass-panel p-3.5 rounded-2xl flex flex-col justify-between">
+                        <span class="text-xs text-slate-400 font-medium">Expiring Soon</span>
+                        <span class="text-xl font-extrabold text-amber-400 mt-1" id="expiringCount">3 Items</span>
+                    </div>
+                </div>
+
+                <!-- Section Header -->
+                <div class="flex items-center justify-between pt-1">
+                    <h2 class="text-sm font-bold text-slate-200 uppercase tracking-wider">Your Pantry</h2>
+                    <span class="text-xs text-slate-400" id="itemTotalCount">5 items total</span>
+                </div>
+
+                <!-- Pantry Item List -->
+                <div id="pantryList" class="space-y-3">
+                    <!-- Items populated dynamically by JS -->
+                </div>
+            </section>
+
+            <!-- TAB 2: AI RECIPES -->
+            <section id="tab-recipes" class="space-y-4 hidden">
+                <div class="glass-panel p-4 rounded-2xl bg-gradient-to-r from-emerald-950/40 to-slate-900 border-emerald-500/20">
+                    <div class="flex items-center space-x-2 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-1">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>AI Rescue Chef</span>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-100">Zero-Waste Meal Ideas</h3>
+                    <p class="text-xs text-slate-400 mt-1">Recipes built around your items expiring within 3 days.</p>
+                </div>
+
+                <div id="recipeList" class="space-y-3">
+                    <!-- Dynamic Recipes -->
+                </div>
+            </section>
+
+            <!-- TAB 3: VIRAL IMPACT & SHARE -->
+            <section id="tab-viral" class="space-y-4 hidden">
+                <div class="glass-panel p-5 rounded-2xl text-center space-y-3 bg-gradient-to-b from-slate-800/80 to-slate-900">
+                    <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto text-2xl border border-emerald-500/30">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-100">Monthly Food Rescue Wrapped</h3>
+                        <p class="text-xs text-slate-400 mt-1">You saved <span class="text-emerald-400 font-bold">18.4 kg</span> of food waste this month!</p>
+                    </div>
+                    <div class="p-3 bg-slate-950/50 rounded-xl text-xs text-slate-300 border border-slate-800">
+                        🌱 Saved 36.8 kg CO₂e emissions<br>
+                        💵 Saved $142.50 in groceries
+                    </div>
+                    <button onclick="shareImpact()" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold rounded-xl text-sm shadow-lg shadow-emerald-500/20 hover:opacity-90 transition">
+                        <i class="fa-solid fa-share-nodes mr-2"></i> Share Impact Card
+                    </button>
+                </div>
+
+                <!-- Invite Friends Loop -->
+                <div class="glass-panel p-4 rounded-2xl space-y-3">
+                    <h4 class="text-sm font-bold text-slate-200">Invite Roommates & Friends</h4>
+                    <p class="text-xs text-slate-400">Get 1 Month Premium Pro AI Recipe Generation for every friend who joins.</p>
+                    <div class="flex items-center space-x-2">
+                        <input type="text" readonly value="https://rescuebite.app/invite?u=79238" class="bg-slate-950 text-xs text-slate-400 p-2.5 rounded-xl border border-slate-800 flex-1 outline-none">
+                        <button onclick="copyInvite()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2.5 rounded-xl text-xs font-semibold border border-slate-700">Copy</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Floating Camera Action Button -->
+        <div class="absolute bottom-16 left-1/2 -translate-x-1/2 z-40">
+            <button onclick="triggerScan()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center shadow-lg shadow-emerald-500/30 hover:scale-105 active:scale-95 transition border-4 border-slate-900">
+                <i class="fa-solid fa-camera text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="absolute bottom-0 left-0 right-0 h-16 bg-slate-900/95 border-t border-slate-800/80 backdrop-blur flex items-center justify-around px-4 z-30">
+            <button onclick="openTab('pantry')" id="nav-pantry" class="flex flex-col items-center space-y-1 text-emerald-400">
+                <i class="fa-solid fa-kitchen-set text-lg"></i>
+                <span class="text-[10px] font-semibold">Pantry</span>
+            </button>
+            <button onclick="openTab('recipes')" id="nav-recipes" class="flex flex-col items-center space-y-1 text-slate-500 hover:text-slate-300">
+                <i class="fa-solid fa-utensils text-lg"></i>
+                <span class="text-[10px] font-semibold">Recipes</span>
+            </button>
+            <div class="w-8"></div> <!-- Spacer for FLOATING BUTTON -->
+            <button onclick="openTab('viral')" id="nav-viral" class="flex flex-col items-center space-y-1 text-slate-500 hover:text-slate-300">
+                <i class="fa-solid fa-[#000] fa-chart-line text-lg"></i>
+                <span class="text-[10px] font-semibold">Impact</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- Scan Receipt Modal Simulation -->
+    <div id="scanModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-panel w-full max-w-xs p-5 rounded-3xl space-y-4 text-center border-emerald-500/30">
+            <div class="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-receipt"></i>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-slate-100">Scanning Receipt...</h3>
+                <p class="text-xs text-slate-400 mt-1">AI OCR reading store items & calculating shelf life.</p>
+            </div>
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div id="scanProgress" class="bg-emerald-400 h-full w-0 transition-all duration-300"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample Initial Pantry Items
+        let pantryItems = [
+            { id: 1, name: "Fresh Organic Milk", category: "Dairy", daysLeft: 1, qty: "1 Gallon", price: 4.20 },
+            { id: 2, name: "Avocados", category: "Produce", daysLeft: 2, qty: "3 units", price: 3.50 },
+            { id: 3, name: "Baby Spinach", category: "Produce", daysLeft: 2, qty: "200g Bag", price: 2.99 },
+            { id: 4, name: "Greek Yogurt", category: "Dairy", daysLeft: 6, qty: "500g Tub", price: 4.50 },
+            { id: 5, name: "Sourdough Bread", category: "Bakery", daysLeft: 8, qty: "1 Loaf", price: 5.00 }
+        ];
+
+        function renderPantry() {
+            const listContainer = document.getElementById('pantryList');
+            listContainer.innerHTML = '';
+
+            pantryItems.sort((a, b) => a.daysLeft - b.daysLeft);
+
+            pantryItems.forEach(item => {
+                let badgeClass = "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
+                if (item.daysLeft <= 1) badgeClass = "bg-rose-500/10 text-rose-400 border-rose-500/30 animate-pulse";
+                else if (item.daysLeft <= 3) badgeClass = "bg-amber-500/10 text-amber-400 border-amber-500/30";
+
+                const card = document.createElement('div');
+                card.className = "glass-panel p-3.5 rounded-2xl flex items-center justify-between border-slate-800";
+                card.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-300 text-base">
+                            ${getItemIcon(item.category)}
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-200">${item.name}</h4>
+                            <p class="text-[10px] text-slate-400">${item.qty} • $${item.price.toFixed(2)}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-[10px] font-bold px-2.5 py-1 rounded-full border ${badgeClass}">
+                            ${item.daysLeft <= 0 ? 'Expires Today' : item.daysLeft + ' Days Left'}
+                        </span>
+                        <button onclick="useItem(${item.id})" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-emerald-500/20 hover:text-emerald-400 text-slate-400 flex items-center justify-center text-xs transition">
+                            <i class="fa-solid fa-check"></i>
+                        </button>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+
+            document.getElementById('itemTotalCount').innerText = `${pantryItems.length} items total`;
+            document.getElementById('expiringCount').innerText = `${pantryItems.filter(i => i.daysLeft <= 3).length} Items`;
+            renderRecipes();
+        }
+
+        function getItemIcon(category) {
+            switch(category) {
+                case 'Dairy': return '<i class="fa-solid fa-bottle-droplet text-blue-400"></i>';
+                case 'Produce': return '<i class="fa-solid fa-carrot text-orange-400"></i>';
+                case 'Bakery': return '<i class="fa-solid fa-bread-slice text-amber-400"></i>';
+                default: return '<i class="fa-solid fa-box text-slate-400"></i>';
+            }
+        }
+
+        function useItem(id) {
+            pantryItems = pantryItems.filter(item => item.id !== id);
+            renderPantry();
+        }
+
+        function renderRecipes() {
+            const recipeContainer = document.getElementById('recipeList');
+            recipeContainer.innerHTML = `
+                <div class="glass-panel p-4 rounded-2xl space-y-2">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">10 Min Meal</span>
+                        <span class="text-[10px] text-slate-400"><i class="fa-solid fa-fire text-amber-400 mr-1"></i> Rescues 3 items</span>
+                    </div>
+                    <h4 class="text-sm font-bold text-slate-100">Creamy Spinach & Avocado Omelet</h4>
+                    <p class="text-xs text-slate-400">Uses your urgent Organic Milk, Avocados, and Baby Spinach before they spoil.</p>
+                </div>
+            `;
+        }
+
+        function openTab(tabName) {
+            ['pantry', 'recipes', 'viral'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                document.getElementById(`nav-${t}`).className = "flex flex-col items-center space-y-1 text-slate-500 hover:text-slate-300";
+            });
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`nav-${tabName}`).className = "flex flex-col items-center space-y-1 text-emerald-400";
+        }
+
+        function triggerScan() {
+            const modal = document.getElementById('scanModal');
+            const progress = document.getElementById('scanProgress');
+            modal.classList.remove('hidden');
+            progress.style.width = '0%';
+
+            setTimeout(() => { progress.style.width = '40%'; }, 300);
+            setTimeout(() => { progress.style.width = '80%'; }, 700);
+            setTimeout(() => { 
+                progress.style.width = '100%';
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    pantryItems.push({ id: Date.now(), name: "Strawberries", category: "Produce", daysLeft: 2, qty: "1 Box", price: 3.99 });
+                    renderPantry();
+                    openTab('pantry');
+                }, 300);
+            }, 1200);
+        }
+
+        function shareImpact() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'RescueBite Impact',
+                    text: 'I saved $142.50 and 18.4kg of food waste this month using RescueBite! 🌱',
+                    url: 'https://rescuebite.app'
+                }).catch(() => {});
+            } else {
+                alert("Impact Stats Copied to Clipboard!");
+            }
+        }
+
+        function copyInvite() {
+            alert("Invite link copied!");
+        }
+
+        // Initial Load
+        renderPantry();
+    </script>
+</body>
+</html>
