@@ -1,11 +1,17 @@
 {
-  "background_color": "#ffffff",
-  "dir": "ltr",
-  "display": "standalone",
-  "name": "RescueBite",
-  "orientation": "any",
-  "scope": "/",
+  "name": "RescueBite - Smart Food Rescue",
   "short_name": "RescueBite",
-  "start_url": "/",
-  "theme_color": "#ffffff"
+  "description": "Smart Food Rescue App",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/512.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
 }
