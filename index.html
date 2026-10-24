@@ -5,170 +5,202 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RescueBite - Smart Food Rescue</title>
     <link rel="manifest" href="manifest.json" />
-    <script src="https://tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cloudflare.com" />
     <style>
         @import url('https://googleapis.com');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #0f172a;
             color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 80px;
         }
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        video {
+        .app-container {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform: scaleX(1);
+            max-width: 450px;
+            padding: 20px;
+        }
+        header {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(30, 41, 59, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #34d399;
+        }
+        .subtitle {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+        .card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .camera-box {
+            height: 200px;
+            background: #020617;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        .btn {
+            background: #10b981;
+            color: #020617;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn-text {
+            color: #34d399;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #e2e8f0;
+            text-align: left;
+        }
+        .list-item {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+        }
+        .badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 20px;
+        }
+        .badge-critical { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+        .badge-warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+        
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 450px;
+            background: #1e293b;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .nav-item {
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 600;
+            background: none;
+            border: none;
+        }
+        .nav-item.active {
+            color: #34d399;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between bg-slate-900 pb-20">
+<body>
 
-    <!-- Top Navigation Bar -->
-    <header class="glass-panel sticky top-0 z-50 px-4 py-4 flex items-center justify-between shadow-lg">
-        <div class="flex items-center space-x-3">
-            <div class="bg-emerald-500 p-2 rounded-xl text-slate-950 shadow-md shadow-emerald-500/20">
-                <i class="fa-solid fa-utensils text-xl"></i>
-            </div>
-            <div>
-                <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">RescueBite</h1>
-                <p class="text-xs text-slate-400">Smart Food Management</p>
-            </div>
+    <header>
+        <div>
+            <div class="logo-text">RescueBite</div>
+            <div class="subtitle">Smart Food Management</div>
         </div>
-        <button class="text-slate-400 hover:text-emerald-400 transition-colors p-2 rounded-lg hover:bg-slate-800">
-            <i class="fa-solid fa-bell text-lg"></i>
-        </button>
     </header>
 
-    <!-- Main Content App Views -->
-    <main class="flex-1 max-w-md mx-auto w-full px-4 pt-6 space-y-6">
-        
-        <!-- SCANNER VIEW -->
-        <div id="scan-view" class="space-y-4">
-            <div class="glass-panel rounded-3xl overflow-hidden relative shadow-2xl aspect-[4/3] flex items-center justify-center bg-slate-950">
-                <!-- Video stream container -->
-                <video id="webcam-preview" autoplay playsinline muted class="hidden"></video>
-                
-                <!-- Overlay message block -->
-                <div id="camera-status" class="text-center p-6 space-y-3 z-10">
-                    <div class="animate-pulse bg-slate-800 text-slate-400 h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <i class="fa-solid fa-camera text-2xl"></i>
-                    </div>
-                    <p id="status-text" class="text-sm font-medium text-slate-300">Camera access is required to scan items.</p>
-                    <button onclick="initializeCamera()" id="start-cam-btn" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 px-5 py-2 rounded-xl font-bold text-sm transition-all shadow-lg shadow-emerald-500/20">
-                        Enable Camera
-                    </button>
+    <main class="app-container">
+        <div id="scan-view">
+            <div class="card">
+                <div class="camera-box" id="camera-status">
+                    Camera access required to scan.
                 </div>
-
-                <!-- Laser scanning line animation -->
-                <div id="scanner-line" class="hidden absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent shadow-[0_0_12px_#34d399] animate-[bounce_2s_infinite]"></div>
-            </div>
-
-            <!-- Manual input trigger fallback option -->
-            <div class="text-center">
-                <p class="text-xs text-slate-500 mb-2">Can't scan your item receipt?</p>
-                <button onclick="switchView('inventory-view')" class="text-sm text-emerald-400 font-semibold hover:underline">
-                    Manually Add to Inventory →
-                </button>
+                <button class="btn" onclick="initializeCamera()">Enable Camera</button>
+                <button class="btn-text" onclick="switchView('inventory-view')">Manually Add to Inventory →</button>
             </div>
         </div>
 
-        <!-- INVENTORY VIEW (Hidden by default) -->
-        <div id="inventory-view" class="hidden space-y-4">
-            <div class="flex justify-between items-center">
-                <h2 class="text-lg font-bold text-slate-200">Tracked Food Items</h2>
-                <span class="bg-slate-800 text-xs px-2.5 py-1 rounded-full text-slate-400 font-medium">3 Items Total</span>
+        <div id="inventory-view" style="display: none;">
+            <h2 class="section-title">Tracked Food Items</h2>
+            <div class="list-item">
+                <div>
+                    <strong style="font-size: 14px;">Fresh Whole Milk</strong>
+                    <div class="subtitle">Expires in 2 days</div>
+                </div>
+                <span class="badge badge-critical">Critical</span>
             </div>
-            
-            <div class="space-y-3">
-                <div class="glass-panel p-4 rounded-2xl flex justify-between items-center">
-                    <div class="flex items-center space-x-3">
-                        <div class="bg-red-500/10 p-2.5 rounded-xl text-red-400"><i class="fa-solid fa-cow"></i></div>
-                        <div><h4 class="font-bold text-sm text-slate-200">Fresh Whole Milk</h4><p class="text-xs text-slate-400">Expires in 2 days</p></div>
-                    </div>
-                    <span class="text-xs bg-red-500/20 text-red-300 px-2.5 py-1 rounded-full font-bold">Critical</span>
+            <div class="list-item">
+                <div>
+                    <strong style="font-size: 14px;">White Sandwich Bread</strong>
+                    <div class="subtitle">Expires in 4 days</div>
                 </div>
-                <div class="glass-panel p-4 rounded-2xl flex justify-between items-center">
-                    <div class="flex items-center space-x-3">
-                        <div class="bg-amber-500/10 p-2.5 rounded-xl text-amber-400"><i class="fa-solid fa-bread-slice"></i></div>
-                        <div><h4 class="font-bold text-sm text-slate-200">White Sandwich Bread</h4><p class="text-xs text-slate-400">Expires in 4 days</p></div>
-                    </div>
-                    <span class="text-xs bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded-full font-bold">Warning</span>
-                </div>
-                <div class="glass-panel p-4 rounded-2xl flex justify-between items-center">
-                    <div class="flex items-center space-x-3">
-                        <div class="bg-emerald-500/10 p-2.5 rounded-xl text-emerald-400"><i class="fa-solid fa-apple-whole"></i></div>
-                        <div><h4 class="font-bold text-sm text-slate-200">Organic Gala Apples</h4><p class="text-xs text-slate-400">Expires in 9 days</p></div>
-                    </div>
-                    <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-1 rounded-full font-bold">Safe</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- RECIPES VIEW (Hidden by default) -->
-        <div id="recipes-view" class="hidden space-y-4">
-            <h2 class="text-lg font-bold text-slate-200">Smart Waste-Reduction Recipes</h2>
-            <div class="glass-panel rounded-2xl overflow-hidden shadow-xl">
-                <div class="p-4 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border-b border-slate-700/50">
-                    <span class="text-[10px] uppercase font-bold tracking-wider text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded">Matches Existing Inventory</span>
-                    <h3 class="font-bold text-base text-slate-100 mt-1">Homemade French Toast</h3>
-                </div>
-                <div class="p-4 space-y-2">
-                    <p class="text-xs text-slate-400">Perfect recipe utilization method to clear out your expiring **Milk** and stale **Bread** packages quickly.</p>
-                    <div class="flex items-center space-x-4 pt-2 text-xs text-slate-400">
-                        <span><i class="fa-regular fa-clock mr-1 text-emerald-400"></i> 15 Mins</span>
-                        <span><i class="fa-solid fa-fire-burner mr-1 text-emerald-400"></i> Easy Level</span>
-                    </div>
-                </div>
+                <span class="badge badge-warning">Warning</span>
             </div>
         </div>
     </main>
 
-    <!-- Global Fixed Tab Navigation Bar -->
-    <nav class="glass-panel fixed bottom-0 left-0 right-0 py-2 border-t border-slate-800 shadow-2xl z-50">
-        <div class="max-w-md mx-auto flex justify-around items-center">
-            <button onclick="switchView('scan-view')" id="nav-scan-view" class="flex flex-col items-center space-y-1 text-emerald-400 text-xs font-semibold transition-colors">
-                <i class="fa-solid fa-qrcode text-xl"></i>
-                <span>Scan Receipt</span>
-            </button>
-            <button onclick="switchView('inventory-view')" id="nav-inventory-view" class="flex flex-col items-center space-y-1 text-slate-400 hover:text-slate-200 text-xs transition-colors">
-                <i class="fa-solid fa-boxes-stacked text-xl"></i>
-                <span>Inventory</span>
-            </button>
-            <button onclick="switchView('recipes-view')" id="nav-recipes-view" class="flex flex-col items-center space-y-1 text-slate-400 hover:text-slate-200 text-xs transition-colors">
-                <i class="fa-solid fa-kitchen-set text-xl"></i>
-                <span>Rescue Recipes</span>
-            </button>
-        </div>
+    <nav>
+        <button class="nav-item active" id="btn-scan" onclick="switchView('scan-view')">Scan</button>
+        <button class="nav-item" id="btn-inv" onclick="switchView('inventory-view')">Inventory</button>
     </nav>
 
-    <!-- Runtime JavaScript Engine App Logic -->
     <script>
-        let currentVideoStream = null;
-
         function switchView(viewId) {
-            // Hide all structural dashboard views
-            document.getElementById('scan-view').classList.add('hidden');
-            document.getElementById('inventory-view').classList.add('hidden');
-            document.getElementById('recipes-view').classList.add('hidden');
+            document.getElementById('scan-view').style.display = viewId === 'scan-view' ? 'block' : 'none';
+            document.getElementById('inventory-view').style.display = viewId === 'inventory-view' ? 'block' : 'none';
             
-            // Show requested view layout
-            document.getElementById(viewId).classList.remove('hidden');
+            document.getElementById('btn-scan').classList.toggle('active', viewId === 'scan-view');
+            document.getElementById('btn-inv').classList.toggle('active', viewId === 'inventory-view');
+        }
 
-            // Reset navigation menu bar button state formatting
-            ['scan-view', 'inventory-view', 'recipes-view'].forEach(id => {
-                const navBtn = document.getElementById(`nav-${id}`);
-                if (id === viewId) {
-                    navBtn.classList.remove('text-slate-400', 'hover:text-slate-200');
-                    navBtn.classList.add('text-emerald-400', 'font-semibold');
-                } else {
-                    navBtn.classList.remove('text-emerald-400', 'font-semibold');
-                    navBtn.classList.add('text-slate-400', 'hover:text-slate-200');
-                }
-            });
-
+        async function initializeCamera() {
+            const statusBox = document.getElementById('camera-status');
+            statusBox.innerText = "Connecting to device camera...";
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                statusBox.innerHTML = '<video id="v" autoplay playsinline style="width:100%; height:100%; border-radius:12px; object-fit:cover;"></video>';
+                document.getElementById('v').srcObject = stream;
+            } catch (err) {
+                statusBox.innerText = "Camera initialization blocked. Please confirm permissions.";
+            }
+        }
+    </script>
+</body>
+</html>
