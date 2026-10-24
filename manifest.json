@@ -36,7 +36,7 @@
 <body class="min-h-screen flex flex-col justify-between bg-slate-900 pb-20">
 
     <!-- INTRO SPLASH SCREEN -->
-    <div id="splash-screen" class="fixed inset-0 bg-slate-950 z-[100] flex flex-col items-center justify-center transition-opacity duration-700 ease-out">
+    <div id="splash-screen" class="fixed inset-0 bg-slate-950 z-50 flex flex-col items-center justify-center transition-opacity duration-700 ease-out">
         <div class="text-center space-y-4 animate-bounce">
             <div class="bg-gradient-to-tr from-emerald-400 to-teal-500 p-5 rounded-3xl text-slate-950 shadow-2xl shadow-emerald-500/20 inline-block">
                 <i class="fa-solid fa-utensils text-4xl"></i>
@@ -51,7 +51,7 @@
     </div>
 
     <!-- Top Navigation Bar -->
-    <header class="glass-panel sticky top-0 z-50 px-4 py-4 flex items-center justify-between shadow-lg max-w-md mx-auto w-full">
+    <header class="glass-panel sticky top-0 z-40 px-4 py-4 flex items-center justify-between shadow-lg max-w-md mx-auto w-full">
         <div class="flex items-center space-x-3">
             <div class="bg-emerald-500 p-2 rounded-xl text-slate-950 shadow-md shadow-emerald-500/20">
                 <i class="fa-solid fa-utensils text-xl"></i>
@@ -112,7 +112,7 @@
     </main>
 
     <!-- Navigation -->
-    <nav class="glass-panel fixed bottom-0 left-0 right-0 py-2 border-t border-slate-800 shadow-2xl z-50 max-w-md mx-auto w-full">
+    <nav class="glass-panel fixed bottom-0 left-0 right-0 py-2 border-t border-slate-800 shadow-2xl z-40 max-w-md mx-auto w-full">
         <div class="flex justify-around items-center">
             <button onclick="switchView('scan-view')" id="nav-scan-view" class="flex flex-col items-center space-y-1 text-emerald-400 text-xs font-semibold">
                 <i class="fa-solid fa-qrcode text-xl"></i>
@@ -131,8 +131,10 @@
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
-                splash.classList.add('opacity-0');
-                setTimeout(() => { splash.style.display = 'none'; }, 700);
+                if(splash) {
+                    splash.classList.add('opacity-0');
+                    setTimeout(() => { splash.style.display = 'none'; }, 700);
+                }
             }, 2500);
         });
 
